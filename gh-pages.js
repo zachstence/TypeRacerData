@@ -1,5 +1,9 @@
 const ghpages = require('gh-pages');
 
+/*
+ * How to publish this project to GitHub pages
+ */
+
 ghpages.publish(
     'public', // path to public directory
     {
