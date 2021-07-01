@@ -1,30 +1,36 @@
 <script lang="ts">
-	export let name: string;
+import { TypeRacer } from "./TypeRacer";
+
+	/*
+	{
+        "ac": 0.97,				Accuracy
+        "np": 2,				Num players
+        "wpm": 92.58,			WPM
+        "r": 1,					Result (placement at end of race)
+        "t": 1625084782.075,	Timestamp
+        "sl": "L6",				Skill level ()
+        "tid": 4790199,			Text ID
+        "gn": 39,				Game Number (counts up for each game a player plays)
+        "pts": 30.86			Points (num words * words per second)
+    },
+	*/
+
+	let promise = TypeRacer.getRaces("zach_08", "dictionary", 100);
+
 </script>
 
+
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+	{#await promise}
+		Loading...
+	{:then data}
+		<pre><code>{data.data.map(d => d.wpm).join("\n")}</code></pre>
+	{:catch error}
+		{error}
+	{/await}
 </main>
 
+
 <style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
 </style>
