@@ -15,19 +15,44 @@ import { TypeRacer } from "./TypeRacer";
     },
 	*/
 
-	let promise = TypeRacer.getRaces("zach_08", "dictionary", 100);
+
+	let promise,
+		username,
+		universe,
+		count;
+
+	async function getRaces() {
+		promise = TypeRacer.getRaces(username, universe, count);
+	}
 
 </script>
 
 
 <main>
-	{#await promise}
-		Loading...
-	{:then data}
-		<pre><code>{data.data.map(d => d.wpm).join("\n")}</code></pre>
-	{:catch error}
-		{error}
-	{/await}
+	<label for="input-username">Username</label>
+	<input id="input-username" bind:value={username} />
+
+	<label for="input-universe">Universe</label>
+	<input id="input-universe" bind:value={universe} />
+
+	<label for="input-count">Count</label>
+	<input id="input-count" bind:value={count} />
+
+	<br />
+
+	<button on:click={getRaces}>Get Races</button>
+
+	<br />
+
+	{#if promise}
+		{#await promise}
+			Loading...
+		{:then data}
+			<pre><code>{data.data.map(d => d.wpm).join("\n")}</code></pre>
+		{:catch error}
+			{error}
+		{/await}
+	{/if}
 </main>
 
 
