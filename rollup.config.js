@@ -79,7 +79,8 @@ export default {
 		production && terser(),
 
 		replace({
-			'process.env.ENVIRONMENT': JSON.stringify( 'production' )
+			'process.env.ENVIRONMENT': JSON.stringify( 'production' ),
+			preventAssignment: true
 		})
 	],
 	watch: {
