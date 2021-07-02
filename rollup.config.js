@@ -9,6 +9,8 @@ import css from 'rollup-plugin-css-only';
 import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
+const env = production ? "production" : "dev";
+console.log(`ENVIRONMENT: ${env}`);
 
 function serve() {
 	let server;
@@ -79,7 +81,7 @@ export default {
 		production && terser(),
 
 		replace({
-			'process.env.ENVIRONMENT': JSON.stringify( 'production' ),
+			'process.env.ENVIRONMENT': JSON.stringify( env ),
 			preventAssignment: true
 		})
 	],
