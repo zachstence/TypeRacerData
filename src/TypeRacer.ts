@@ -1,19 +1,30 @@
-import axios from 'axios';
+import axios from "axios";
+import {z} from "zod";
 
-export class TypeRacer {
+// @ts-expect-error The value of process.env.ENVIRONMENT is replaced by rollup during the build
+// eslint-disable-next-line no-undef
+const CORS_ANYWHERE = process.env.ENVIRONMENT === "dev"
+    ? "http://localhost:8080/"
+    : "https://zach08-cors-anywhere.herokuapp.com/";
 
-    private static CORS_ANYWHERE = process.env.ENVIRONMENT === "dev"
-        ? "https://zach08-cors-anywhere.herokuapp.com/"
-        : "http://localhost:8080/";
+const DEFAULT_NUM_GAMES = 10;
 
+const zodGame = z.object({
+    wpm: z.number(),
+    ac: z.number(),
+    r: z.number(),
+    t: z.number(),
+    sl: z.string(),
+    tid: z.number(),
+    gn: z.number(),
+    np: z.number(),
+    pts: z.number(),
+});
+const zodGames = z.array(zodGame);
 
-    static async getRaces(playerId: string, universe: string, numRaces: number) {
-        console.log(`ENVIRONMENT: ${process.env.ENVIRONMENT}`);
-        console.log(`Using CORS Anywhere URL: ${this.CORS_ANYWHERE}`);
-        
-        return await axios.get(
-            `${TypeRacer.CORS_ANYWHERE}https://data.typeracer.com/games?playerId=tr:${playerId}&universe=${universe ? universe : "play"}&n=${numRaces ? numRaces : 10}`,
-        );
-    }
+export type Game = z.infer<typeof zodGame>;
 
-}
+export const getGames = async (playerId: string, universe: string, numRaces: number): Promise<Game[]> => {
+    const response = await axios.get(`${CORS_ANYWHERE}https://data.typeracer.com/games?playerId=tr:${playerId}&universe=${universe ? universe : "play"}&n=${numRaces ? numRaces : DEFAULT_NUM_GAMES}`);
+    return zodGames.parse(response.data);
+};
